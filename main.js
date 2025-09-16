@@ -5,7 +5,6 @@
   1. Secrets and settings  
      - All tokens, IDs and the path to the Google key file come from .env
        (BOT_TOKEN, CHAT_ID, SHEET_ID, GOOGLE_KEY_PATH, ALLOWED_USERS).  
-       Nothing sensitive is hard-coded.
 
   2. Who can use the bot  
      - Only Telegram users listed in ALLOWED_USERS can send update commands.  
@@ -13,7 +12,6 @@
 
   3. Google access  
      - Works with a Google service-account key file set in GOOGLE_KEY_PATH.  
-       Keep this file private and never commit it to Git.
 
   4. Data handling  
      - A small local file (lastData.json) stores the previous sheet data
