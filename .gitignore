@@ -1,0 +1,7 @@
+.env
+lastData.json
+nocduty-62aefb274e74.json
+*.log
+*.key
+node_modules/
+venv/
