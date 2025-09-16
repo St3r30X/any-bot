@@ -24,7 +24,12 @@
 
   6. Testing  
      - Old code for local Excel testing is commented out to avoid accidental use,
-       but can be re-enabled if you need offline tests.
+       but can be re-enabled if we need offline tests.
+  
+  7. Input validation
+     - Our code includes input validation that blocks malicious data.
+
+The current bot can be refactored to work with Mattermost instead of Telegram with a few changes...
 */
 
 
@@ -53,7 +58,7 @@ const dateHeader = localSheet[1];
 
 */
 
-// TG IDs from the .env
+// ALLOWED_USERS can send update commands!
 const allowedUsers = (process.env.ALLOWED_USERS || "")
   .split(",")
   .map(id => Number(id.trim()))
@@ -240,6 +245,12 @@ bot.on("message", async msg => {
   }
 
   const dateStr = parts[0];
+
+  
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+  return bot.sendMessage(msg.chat.id, "❌ Неверный формат даты. Используйте YYYY-MM-DD");
+  }
+
   const newValue = parts.pop();
   const personName = parts.slice(1).join(" ");
 
