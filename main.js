@@ -166,10 +166,15 @@ function buildChangeMessage(changes, sheet) {
 }
 
 async function sendDailyDuty(dateStr) {
-  const today = dateStr || new Date().toISOString().slice(0, 10);
+  const today = dateStr
+    ? new Date(dateStr)
+    : new Date(Date.now() + 24 * 60 * 60 * 1000); 
+
+  const tomorrowStr = today.toISOString().slice(0, 10);
+
   const sheet = await readGoogleSheet();
   const header = sheet[1];
-  const colIndex = header.findIndex(v => normalizeDate(v) === today);
+  const colIndex = header.findIndex(v => normalizeDate(v) === tomorrowStr);
   if (colIndex === -1) return;
 
   const day = [];
@@ -191,11 +196,12 @@ async function sendDailyDuty(dateStr) {
 
   if (!day.length && !night.length) return;
 
-  let msg = `📅 Дежурство на ${today}:\n\n`;
+  let msg = `📅 Дежурство на ${tomorrowStr}:\n\n`;
   if (day.length) msg += `☀️ ДЕНЬ:\n${day.join("\n")}\n\n`;
   if (night.length) msg += `🌙 НОЧЬ:\n${night.join("\n")}`;
   await bot.sendMessage(CHAT_ID, msg, { parse_mode: "HTML" });
 }
+
 
 
 //----- MESSAGE SENDER LOGIC END -----//
@@ -268,5 +274,8 @@ bot.on("message", async msg => {
 
 notifyGoogleChanges();
 sendDailyDuty();
+
 cron.schedule("0 9 * * *", () => sendDailyDuty());
+
+cron.schedule("*/15 * * * *", async () => notifyGoogleChanges())
 
