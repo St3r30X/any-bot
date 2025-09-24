@@ -32,8 +32,6 @@
 The current bot can be refactored to work with Mattermost instead of Telegram with a few changes...
 */
 
-
-
 const fs = require("fs");
 const path = require("path");
 const xlsx = require("node-xlsx");
@@ -209,14 +207,17 @@ async function sendDailyDuty(dateStr) {
 //----- SHEET UPDATER LOGIC START -----//
 async function notifyGoogleChanges() {
   const currentSheet = await readGoogleSheet();
-  const cachedSheet  = loadCache();
-  if (!cachedSheet) return saveCache(currentSheet);
+  const cachedSheet = loadCache();
 
-  const changes = findChanges(cachedSheet, currentSheet);
-  if (changes.length) {
+  if (!cachedSheet) {
     saveCache(currentSheet);
+    return;
+  }
+  const changes = findChanges(cachedSheet, currentSheet);
+  if (changes.length > 0) {
     const msg = buildChangeMessage(changes, currentSheet);
     await bot.sendMessage(CHAT_ID, msg, { parse_mode: "HTML" });
+    saveCache(currentSheet);
   }
 }
 
@@ -277,5 +278,5 @@ sendDailyDuty();
 
 cron.schedule("0 9 * * *", () => sendDailyDuty());
 
-cron.schedule("*/15 * * * *", async () => notifyGoogleChanges())
+cron.schedule("*/1 * * * *", async () => notifyGoogleChanges())
 
