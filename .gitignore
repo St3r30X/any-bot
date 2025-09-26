@@ -5,3 +5,5 @@ nocduty-62aefb274e74.json
 *.key
 node_modules/
 venv/
+.idea
+res/b-days.env

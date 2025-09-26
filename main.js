@@ -36,6 +36,7 @@ const { google } = require("googleapis");
 const TelegramBot = require("node-telegram-bot-api");
 const cron = require("node-cron");
 require("dotenv").config();
+const { parseBdays } = require("./side-services/birthdayReminder");
 
 const BOT_TOKEN  = process.env.BOT_TOKEN;
 const CHAT_ID    = process.env.CHAT_ID;
@@ -309,6 +310,7 @@ bot.on("message", async msg => {
 
 notifyGoogleChanges();
 sendDailyDuty();
+parseBdays();
 
 cron.schedule("0 9 * * *", () => sendDailyDuty());
 cron.schedule("*/5 * * * *", async () => notifyGoogleChanges());

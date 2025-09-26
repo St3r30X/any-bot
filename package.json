@@ -4,13 +4,19 @@
   "description": "Telegram-bot for NOC",
   "main": "main.js",
   "scripts": {
-    "start": "node main.js"
+    "start": "node main.js",
+    "dev": "nodemon main.js"
   },
   "license": "ISC",
   "dependencies": {
+    "dayjs": "^1.11.18",
     "dotenv": "^17.2.2",
     "googleapis": "^159.0.0",
     "node-cron": "^4.2.1",
-    "node-telegram-bot-api": "^0.66.0"
+    "node-telegram-bot-api": "^0.66.0",
+    "node-xlsx": "^0.24.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
   }
 }
